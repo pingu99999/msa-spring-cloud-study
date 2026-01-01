@@ -1,0 +1,43 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+target/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Spring Boot
+application-local.yml
+application-dev.yml
+application-prod.yml
+
+# Mac
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Package Files
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat

@@ -1,0 +1,70 @@
+# ==========================================
+# Eureka Server 설정 파일
+# 작성자: 팀장
+# 용도: MSA의 서비스 레지스트리 (전화번호부 같은 역할)
+# ==========================================
+
+server:
+  port: 8761  # Eureka Server가 실행될 포트 (관례적으로 8761 사용)
+
+spring:
+  application:
+    name: discovery-service  # 이 애플리케이션의 이름
+  
+  # Eureka 대시보드 접근을 위한 기본 인증 설정
+  security:
+    user:
+      name: eureka        # 로그인 ID
+      password: eureka123  # 로그인 비밀번호 (운영환경에서는 환경변수로 관리!)
+
+# ==========================================
+# Eureka 핵심 설정
+# ==========================================
+eureka:
+  instance:
+    hostname: localhost  # Eureka Server의 호스트명
+  
+  client:
+    # Eureka Server 자신은 다른 Eureka에 등록할 필요 없음
+    register-with-eureka: false  # 자기 자신을 서비스로 등록하지 않음
+    fetch-registry: false        # 다른 서비스 목록을 가져오지 않음
+    
+    service-url:
+      # Eureka Server의 주소 (클라이언트들이 접속할 주소)
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  
+  server:
+    # Self-preservation 모드 설정 (중요!)
+    # true: 네트워크 장애로 하트비트가 안와도 서비스를 제거하지 않음 (운영환경)
+    # false: 일정시간 하트비트가 없으면 바로 제거 (개발환경)
+    enable-self-preservation: false
+    
+    # 서비스 제거 체크 주기 (5초마다 체크)
+    eviction-interval-timer-in-ms: 5000
+
+# ==========================================
+# 모니터링 설정 (Actuator)
+# ==========================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info  # health, info 엔드포인트만 노출
+  endpoint:
+    health:
+      show-details: always   # health 상태 상세정보 표시
+
+# ==========================================
+# 로깅 설정
+# ==========================================
+logging:
+  level:
+    com.netflix.eureka: INFO      # Eureka 관련 로그 레벨
+    com.netflix.discovery: INFO   # Discovery 관련 로그 레벨
+    
+# ==========================================
+# 실무 체크포인트
+# - 운영환경에서는 enable-self-preservation: true 필수!
+# - 비밀번호는 반드시 환경변수로 관리 (${EUREKA_PASSWORD})
+# - 클러스터링 시 defaultZone에 여러 Eureka 주소 등록
+# ==========================================
